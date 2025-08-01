@@ -1,35 +1,58 @@
----
-name: Python Test
-on:
-   push: True
-   pull_request:
+name: Django Group Tests
 
+on: [push, pull_request]
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
-    env:
-        VENV: venv
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
+
+      - name: Install pylint
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+
+      - name: Run pylint
+        run: |
+          echo "Running pylint..."
+          pylint */.py || true
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pylint
 
-      - name: Run tests with pytest
+      - name: Run Django tests
         run: |
-           source $VENV/bin/activate
-           pytest
+          echo "Running Django tests..."
+          python manage.py test
 
-      - name: lint code with pylint
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Simulate deployment
         run: |
-          pylint **/*.py || true # prevent lint failures from stopping the workflow
+          echo "Deploying Django app..."
+          # Add real deployment commands here if needed
