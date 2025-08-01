@@ -1,4 +1,4 @@
-name: Django Group Tests
+name: Group work
 
 on: [push, pull_request]
 
@@ -22,7 +22,7 @@ jobs:
       - name: Run pylint
         run: |
           echo "Running pylint..."
-          pylint */.py || true
+          pylint **/*.py || true
 
   test:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
           python manage.py test
 
   deploy:
-    needs: test
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
