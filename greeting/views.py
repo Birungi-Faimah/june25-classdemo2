@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
+# Django view function to render the homepage
 def index(request):
-    return render(request, 'index.html', {'greeting': 'Hello'})
+    context = {
+        'greeting': 'Hello, Birungi!'  # You can personalize this further
+    }
+    return render(request, 'index.html', context)
