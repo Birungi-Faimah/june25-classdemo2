@@ -1,5 +1,8 @@
+---
 name: Python Test
-on: [push, pull_request]
+on:
+   push: True
+   pull_request: True
 
 
 jobs:
@@ -27,3 +30,9 @@ jobs:
         run: |
            source $VENV/bin/activate
            pytest
+
+      - name: lint code
+        run: |
+          source $VENV/bin/activate
+          pip install pylint
+          pylint **/*.py
