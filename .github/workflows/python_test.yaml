@@ -40,13 +40,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Django tests
+      - name: Set Django settings
+        run: echo "DJANGO_SETTINGS_MODULE=your_project.settings" >> $GITHUB_ENV
+
+      - name: Apply migrations
+        run: python manage.py migrate
+
+      - name: Run Django tests with pytest
         run: |
-          echo "Running Django tests..."
-          python manage.py test
+          echo "Running pytest for Django..."
+          pytest
 
   deploy:
-    if: always()
+    if: always()  # Ensures deploy runs no matter what
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
